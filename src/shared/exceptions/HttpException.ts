@@ -1,4 +1,4 @@
-import { HttpStatus } from '../enums/http-status.enum';
+import { HttpStatus } from '../enums/HttpStatusEnum';
 
 export class HttpException extends Error {
     private _status: HttpStatus;

@@ -1,8 +1,8 @@
 import { Response } from 'express';
-import { HttpStatus } from '../enums/http-status.enum';
-import { Result } from '../models/result.model';
-import { HttpException } from '../exceptions/http.exception';
-import { PaginatedResult } from '../models/paginated-result.model';
+import { HttpStatus } from '../enums/HttpStatusEnum';
+import { Result } from '../models/Result';
+import { HttpException } from '../exceptions/HttpException';
+import { PaginatedResult } from '../models/PaginatedResult';
 
 export class ApiService {
     static response<T, E extends HttpException, R>(

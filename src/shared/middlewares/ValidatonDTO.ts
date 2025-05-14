@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, RequestHandler } from 'express';
 import { ApiService } from '../services/api.service';
-import { HttpStatus } from '../enums/http-status.enum';
-import { BaseSchema } from '../schemas/base.schema';
+import { HttpStatus } from '../enums/HttpStatusEnum';
+import { BaseSchema } from '../schemas/BaseSchema';
 
 export class ValidationDTO {
     static validate(schema: new () => BaseSchema): RequestHandler {

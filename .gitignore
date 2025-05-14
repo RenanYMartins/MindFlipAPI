@@ -8,3 +8,6 @@
 
 # Typescript build output
 /dist
+
+# Prisma build
+generated/prisma

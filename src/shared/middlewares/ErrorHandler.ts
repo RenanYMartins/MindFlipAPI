@@ -1,5 +1,5 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
-import { HttpException } from '../exceptions/http.exception';
+import { HttpException } from '../exceptions/HttpException';
 
 export class ErrorHandler {
     static handler: ErrorRequestHandler = function (
