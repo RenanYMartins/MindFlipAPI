@@ -5,17 +5,17 @@ import { HttpException } from '../exceptions/HttpException';
 import { PaginatedResult } from '../models/PaginatedResult';
 
 export class ApiService {
-    static response<T, E extends HttpException, R>(
+    static response<T, R>(
         res: Response,
         status: HttpStatus,
-        result: Result<T, E>,
+        result: Result<T>,
         wrapper: new (value: T) => R
     ): void {
         if (result.isError) {
-            return this.error(res, result.error.status || 500, result.error.message);
+            return this.error(res, result.error!.status || 500, result.error!.message);
         }
 
-        this.success(res, status, new wrapper(result.value));
+        this.success(res, status, new wrapper(result.value!));
     }
 
     static success<T>(res: Response, status: HttpStatus, data: T): void {

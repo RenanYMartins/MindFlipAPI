@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, RequestHandler } from 'express';
-import { ApiService } from '../services/api.service';
+import { ApiService } from '../services/ApiService';
 import { HttpStatus } from '../enums/HttpStatusEnum';
 import { BaseSchema } from '../schemas/BaseSchema';
 

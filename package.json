@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node --env-file=.env.prod dist/server.js",
-    "dev": "nodemon --exec node -r ts-node/register --env-file=.env.dev ./src/server.ts"
+    "dev": "prisma generate && nodemon --exec node -r ts-node/register --env-file=.env.dev ./src/server.ts"
   },
   "keywords": [],
   "author": "",
