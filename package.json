@@ -6,7 +6,7 @@
   "scripts": {
     "build": "prisma generate && tsc",
     "start": "node --env-file=.env.prod dist/server.js",
-    "dev": "prisma generate && nodemon --exec node -r ts-node/register --env-file=.env.dev ./src/server.ts"
+    "dev": "prisma generate && nodemon --exec node -r ts-node/register --env-file=.env ./src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/client": "^6.7.0",
     "express": "^4.21.2",
+    "reflect-metadata": "^0.2.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
