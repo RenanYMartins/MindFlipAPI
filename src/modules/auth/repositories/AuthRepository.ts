@@ -1,5 +1,5 @@
 import { UserAdapter } from '@shared/adapters/UserAdapter';
-import { DatabaseSingleton } from '@shared/database/DatabaseSingleton';
+import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
 import { User } from '@shared/models/User';
 
 export class AuthRepository {

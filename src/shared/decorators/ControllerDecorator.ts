@@ -1,13 +1,12 @@
+import { DecoratorMeta } from '@shared/enums/DecoratorMetaEnum';
 import 'reflect-metadata';
-
-const CONTROLLER_META = Symbol('controller');
 
 export function Controller(path: string): ClassDecorator {
     return (target) => {
-        Reflect.defineMetadata(CONTROLLER_META, path, target);
+        Reflect.defineMetadata(DecoratorMeta.PREFIX, path, target);
     };
 }
 
 export function getControllerPath(target: object): string | undefined {
-    return Reflect.getMetadata(CONTROLLER_META, target);
+    return Reflect.getMetadata(DecoratorMeta.PREFIX, target);
 }

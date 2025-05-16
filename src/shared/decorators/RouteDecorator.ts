@@ -1,21 +1,26 @@
+import { DecoratorMeta } from '@shared/enums/DecoratorMetaEnum';
 import 'reflect-metadata';
 
-const ROUTE_META = Symbol('routes');
+export type RouteDecoratorData = {
+    method: string;
+    path: string;
+    handlerName: string | symbol;
+}
 
-function Route(method: string, path: string): MethodDecorator {
+function decoratorRoute(method: string, path: string): MethodDecorator {
     return (target, propertyKey) => {
-        const routes = Reflect.getMetadata(ROUTE_META, target.constructor) || [];
+        const routes = Reflect.getMetadata(DecoratorMeta.ROUTES, target.constructor) || [];
         routes.push({ method, path, handlerName: propertyKey });
-        Reflect.defineMetadata(ROUTE_META, routes, target.constructor);
+        Reflect.defineMetadata(DecoratorMeta.ROUTES, routes, target.constructor);
     };
 }
 
 export function getRoutes(target: object) {
-    return Reflect.getMetadata(ROUTE_META, target) || [];
+    return Reflect.getMetadata(DecoratorMeta.ROUTES, target) || [];
 }
 
-export const Get = (path: string) => Route('get', path);
-export const Post = (path: string) => Route('post', path);
-export const Put = (path: string) => Route('put', path);
-export const Patch = (path: string) => Route('patch', path);
-export const Delete = (path: string) => Route('delete', path);
+export const Get = (path: string) => decoratorRoute('get', path);
+export const Post = (path: string) => decoratorRoute('post', path);
+export const Put = (path: string) => decoratorRoute('put', path);
+export const Patch = (path: string) => decoratorRoute('patch', path);
+export const Delete = (path: string) => decoratorRoute('delete', path);

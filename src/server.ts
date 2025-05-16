@@ -1,10 +1,15 @@
 import express from 'express';
-import routerV1 from './shared/routes/RouterV1';
 import { ErrorHandler } from './shared/middlewares/ErrorHandler';
+import { RouterFactory } from './shared/routes/RouterFactory';
+import { AuthController } from './modules/auth/controllers/AuthController';
 
 const app = express();
+new RouterFactory();
+// const teste = new RouterFactory();
+// teste.addControllers(new AuthController());
+
 app.use(express.json());
-app.use(routerV1);
+// app.use(teste.buidRoutes());
 app.use(ErrorHandler.handler);
 
 app.listen(process.env.PORT || 3000);
