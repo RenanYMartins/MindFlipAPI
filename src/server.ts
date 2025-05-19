@@ -5,11 +5,11 @@ import { AuthController } from './modules/auth/controllers/AuthController';
 
 const app = express();
 new RouterFactory();
-// const teste = new RouterFactory();
-// teste.addControllers(new AuthController());
+const teste = new RouterFactory();
+teste.addControllers(AuthController);
 
 app.use(express.json());
-// app.use(teste.buidRoutes());
+app.use(teste.buildRoutes());
 app.use(ErrorHandler.handler);
 
 app.listen(process.env.PORT || 3000);

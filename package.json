@@ -6,7 +6,7 @@
   "scripts": {
     "build": "prisma generate && tsc",
     "start": "node --env-file=.env.prod dist/server.js",
-    "dev": "prisma generate && nodemon --exec node -r ts-node/register --env-file=.env ./src/server.ts"
+    "dev": "prisma generate && nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +29,7 @@
     "prettier": "^3.5.3",
     "prisma": "^6.7.0",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.27.0"
   }

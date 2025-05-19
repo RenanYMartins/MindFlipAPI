@@ -1,22 +1,22 @@
-import { DecoratorMeta } from '@shared/enums/DecoratorMetaEnum';
+import { DecoratorMetadata } from '@shared/enums/DecoratorMetaEnum';
 import 'reflect-metadata';
 
 export type RouteDecoratorData = {
-    method: string;
+    method: 'get' | 'post' | 'put' | 'patch' | 'delete';
     path: string;
     handlerName: string | symbol;
 }
 
 function decoratorRoute(method: string, path: string): MethodDecorator {
     return (target, propertyKey) => {
-        const routes = Reflect.getMetadata(DecoratorMeta.ROUTES, target.constructor) || [];
+        const routes = Reflect.getMetadata(DecoratorMetadata.ROUTES, target.constructor) || [];
         routes.push({ method, path, handlerName: propertyKey });
-        Reflect.defineMetadata(DecoratorMeta.ROUTES, routes, target.constructor);
+        Reflect.defineMetadata(DecoratorMetadata.ROUTES, routes, target.constructor);
     };
 }
 
 export function getRoutes(target: object) {
-    return Reflect.getMetadata(DecoratorMeta.ROUTES, target) || [];
+    return Reflect.getMetadata(DecoratorMetadata.ROUTES, target) || [];
 }
 
 export const Get = (path: string) => decoratorRoute('get', path);

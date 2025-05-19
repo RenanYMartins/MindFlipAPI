@@ -1,38 +1,34 @@
-import { getMiddlewares } from "@shared/decorators/MiddlewareDecorator";
-import { RouteDecoratorData } from "@shared/decorators/RouteDecorator";
-import { DecoratorMeta } from "@shared/enums/DecoratorMetaEnum";
 import { Router } from "express";
+import { RouteDecoratorData } from "@shared/decorators/RouteDecorator";
+import { DecoratorMetadata } from "@shared/enums/DecoratorMetaEnum";
+import { decoratorMiddlewares } from "@shared/decorators/MiddlewareDecorator";
+import { BaseController } from "@shared/models/BaseController";
 
 export class RouterFactory {
-    private controllers: object[];
+    private controllers: (new () => BaseController)[];
 
     public constructor() {
         this.controllers = [];
     }
 
-    public addControllers(...controllers: object[]) {
-        this.controllers.push(controllers);
+    public addControllers(...controllers: (new () => BaseController)[]) {
+        this.controllers.push(...controllers);
     }
 
-    public buidRoutes(): Router {
+    public buildRoutes(): Router {
         const router = Router();
 
-        for (const controller of this.controllers) {
-            console.log(controller);
-            const prefix = Reflect.getMetadata('prefix', controller) || '';
-            const routes: RouteDecoratorData[] = Reflect.getMetadata(DecoratorMeta.ROUTES, controller) || [];
+        for (const Controller of this.controllers) {
+            const instance = new Controller();
+            const prefix = Reflect.getMetadata(DecoratorMetadata.PREFIX, Controller) || '';
+            const routes: RouteDecoratorData[] = Reflect.getMetadata(DecoratorMetadata.ROUTES, Controller) || [];
 
             const controllerRouter = Router();
 
-            console.log(prefix)
-            console.log(routes);
-
             for (const route of routes) {
-                const handler = Reflect.get(controller, route.handlerName);
-                const middlewares = getMiddlewares(controller, route.handlerName);
-                console.log(handler)
-                console.log(middlewares);
-                Reflect.get(controllerRouter, route.method)(route.path, ...middlewares, handler);
+                const handler = instance[route.handlerName.toString()].bind(instance);
+                const middlewares = decoratorMiddlewares(instance, route.handlerName);
+                controllerRouter[route.method](route.path, ...middlewares, handler);
             }
 
             router.use(prefix, controllerRouter);
