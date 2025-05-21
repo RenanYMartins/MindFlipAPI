@@ -1,5 +1,5 @@
-import { DecoratorMetadata } from '@shared/enums/DecoratorMetaEnum';
 import 'reflect-metadata';
+import { DecoratorMetadata } from '@shared/enums/DecoratorMetaEnum';
 
 export function Controller(path: string): ClassDecorator {
     return (target) => {
