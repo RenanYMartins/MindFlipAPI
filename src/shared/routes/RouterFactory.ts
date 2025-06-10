@@ -2,20 +2,16 @@ import { Router } from "express";
 import { RouteDecoratorData } from "@shared/decorators/RouteDecorator";
 import { DecoratorMetadata } from "@shared/enums/DecoratorMetaEnum";
 import { decoratorMiddlewares } from "@shared/decorators/MiddlewareDecorator";
-import { BaseController } from "@shared/models/BaseController";
+import { BaseControllerConstructor } from "@shared/models/BaseController";
 
 export class RouterFactory {
-    private controllers: (new () => BaseController)[];
+    private controllers: BaseControllerConstructor[];
 
-    public constructor() {
-        this.controllers = [];
+    public constructor(controllers: BaseControllerConstructor[]) {
+        this.controllers = controllers;
     }
 
-    public addControllers(...controllers: (new () => BaseController)[]) {
-        this.controllers.push(...controllers);
-    }
-
-    public buildRoutes(): Router {
+    public build(): Router {
         const router = Router();
 
         for (const Controller of this.controllers) {

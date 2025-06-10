@@ -4,7 +4,6 @@ import { RouterFactory } from './shared/routes/RouterFactory';
 import { AuthController } from './modules/auth/controllers/AuthController';
 
 const app = express();
-new RouterFactory();
 const teste = new RouterFactory();
 teste.addControllers(AuthController);
 
