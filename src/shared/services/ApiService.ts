@@ -9,13 +9,17 @@ export class ApiService {
         res: Response,
         status: HttpStatus,
         result: Result<T>,
-        wrapper: new (value: T) => R
+        wrapper?: new (value: T) => R
     ): void {
         if (result.isError) {
             return this.error(res, result.error!.status || 500, result.error!.message);
         }
 
-        this.success(res, status, new wrapper(result.value!));
+        if (wrapper != null) {
+            return this.success(res, status, new wrapper(result.value!));
+        }
+
+        this.success(res, status, result.value);
     }
 
     static success<T>(res: Response, status: HttpStatus, data: T): void {

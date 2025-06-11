@@ -11,3 +11,4 @@
 
 # Prisma build
 generated/prisma
+prisma/migrations

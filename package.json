@@ -6,7 +6,8 @@
   "scripts": {
     "build": "prisma generate && tsc",
     "start": "node --env-file=.env.prod dist/server.js",
-    "dev": "prisma generate && nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/server.ts"
+    "dev": "prisma generate && nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/server.ts",
+    "setup-db": "prisma migrate dev"
   },
   "keywords": [],
   "author": "",

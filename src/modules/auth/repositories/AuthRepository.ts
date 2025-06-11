@@ -1,11 +1,13 @@
 import { UserAdapter } from '@shared/adapters/UserAdapter';
 import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
 import { User } from '@shared/models/User';
+import { Result } from '@shared/models/Result';
+import { HttpException } from '@shared/exceptions/HttpException';
 
 export class AuthRepository {
     private db = DatabaseSingleton.getInstance();
 
-    public async login(email: string, password: string): Promise<User | null> {
+    public async login(email: string, password: string): Promise<Result<User | null>> {
         const result = await this.db.execute((client) =>
             client.user.findUnique({
                 where: {
@@ -15,10 +17,14 @@ export class AuthRepository {
             })
         );
 
-        if (result.isError || result.value == null) {
-            return null;
+        if (result.isError) {
+            return Result.error(result.error!);
         }
 
-        return new UserAdapter().fromEntity(result.value);
+        if (result.value == null) {
+            return Result.ok(null);
+        }
+
+        return Result.ok(new UserAdapter().fromEntity(result.value!));
     }
 }
