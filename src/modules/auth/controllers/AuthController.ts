@@ -8,6 +8,7 @@ import { LoginRequestDTO, LoginRequestSchema } from '../dto/request/LoginRequest
 import { AuthService } from '../services/AuthService';
 import { ApiService } from '@shared/services/ApiService';
 import { HttpStatus } from '@shared/enums/HttpStatusEnum';
+import { LoginResponseDTO } from '../dto/response/LoginResponseDTO';
 
 @Controller('/')
 export class AuthController extends BaseController {
@@ -17,7 +18,7 @@ export class AuthController extends BaseController {
     @Use(ValidationDTO.validate(LoginRequestSchema))
     public async auth(req: Request, res: Response): Promise<void> {
         const dto = req.body as object as LoginRequestDTO;
-        const token = await this.service.login(dto.email, dto.password);
-        ApiService.response(res, HttpStatus.OK, token);
+        const result = await this.service.login(dto.email, dto.password);
+        ApiService.response(res, HttpStatus.OK, result, LoginResponseDTO);
     }
 }
