@@ -1,7 +1,8 @@
 import { ModuleComposite } from "@shared/composites/ModuleComposite";
 import { BaseControllerConstructor } from "@shared/models/BaseController";
-import { RouterFactory } from "@shared/routes/RouterFactory";
+import { RouterFactory } from "@shared/factories/RouterFactory";
 import { Router } from "express";
+import { AuthController } from "./controllers/AuthController";
 
 export class AuthModuleV1 implements ModuleComposite {
     private children: ModuleComposite[];
@@ -9,7 +10,7 @@ export class AuthModuleV1 implements ModuleComposite {
 
     public constructor() {
         this.children = [];
-        this.controllers = [];
+        this.controllers = [AuthController];
     }
 
     addChildren(...module: ModuleComposite[]): void {
@@ -22,10 +23,10 @@ export class AuthModuleV1 implements ModuleComposite {
 
     buildRoutes(): Router {
         const router = Router();
-        router.use(new RouterFactory(this.controllers).build());
+        router.use('/v1/auth', new RouterFactory(this.controllers).build());
 
         for (const module of this.children) {
-            router.use(module.buildRoutes());
+            router.use('/v1/auth', module.buildRoutes());
         }
 
         return router;

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { RouteDecoratorData } from "@shared/decorators/RouteDecorator";
 import { DecoratorMetadata } from "@shared/enums/DecoratorMetaEnum";
 import { decoratorMiddlewares } from "@shared/decorators/MiddlewareDecorator";
-import { BaseControllerConstructor } from "@shared/models/BaseController";
+import { BaseControllerConstructor, BaseControllerHandler } from "@shared/models/BaseController";
 
 export class RouterFactory {
     private controllers: BaseControllerConstructor[];
@@ -22,7 +22,7 @@ export class RouterFactory {
             const controllerRouter = Router();
 
             for (const route of routes) {
-                const handler = instance[route.handlerName.toString()].bind(instance);
+                const handler = (instance[route.handlerName.toString()] as BaseControllerHandler).bind(instance);
                 const middlewares = decoratorMiddlewares(instance, route.handlerName);
                 controllerRouter[route.method](route.path, ...middlewares, handler);
             }
