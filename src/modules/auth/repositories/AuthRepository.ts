@@ -2,10 +2,9 @@ import { UserAdapter } from '@shared/adapters/UserAdapter';
 import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
 import { User } from '@shared/models/User';
 import { Result } from '@shared/models/Result';
-import { HttpException } from '@shared/exceptions/HttpException';
 
 export class AuthRepository {
-    private db = DatabaseSingleton.getInstance();
+    private readonly db = DatabaseSingleton.getInstance();
 
     public async login(email: string, password: string): Promise<Result<User | null>> {
         const result = await this.db.execute((client) =>

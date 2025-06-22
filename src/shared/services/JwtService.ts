@@ -1,18 +1,17 @@
-import { sign, verify } from 'jsonwebtoken';
+import { JwtPayload, sign, verify } from 'jsonwebtoken';
 import { HttpException } from '@shared/exceptions/HttpException';
 import { Result } from '@shared/models/Result';
 import { HttpStatus } from '@shared/enums/HttpStatusEnum';
 import { AuthUser } from '@shared/models/AuthUser';
+import { ApiToken } from '@shared/models/ApiToken';
 
 export class JwtService {
-    public validate(token: string) {
+    public validate(token: string): Result<AuthUser> {
         try {
-            console.log(verify(token, process.env.AUTH_KEY!));
-            return Result.ok(true);
+            const payload = verify(token, process.env.AUTH_KEY!) as unknown as ApiToken;
+            return Result.ok(AuthUser.fromToken(payload));
         } catch (error) {
-            return Result.error(
-                new HttpException(HttpStatus.UNAUTHORIZED, 'Acesso não autorizado')
-            );
+            return Result.error(new HttpException(HttpStatus.UNAUTHORIZED, 'Acesso não autorizado'));
         }
     }
 

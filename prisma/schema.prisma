@@ -20,25 +20,19 @@ model User {
   email     String   @unique @db.VarChar(255)
   password  String   @db.VarChar(255)
   createdAt DateTime @default(now())
-  folders   Folder[]
+  topics    Topic[]
 }
 
-model Folder {
-  id     Int     @id @default(autoincrement())
-  name   String  @db.VarChar(255)
-  color  String  @db.Char(6)
-  userId Int
-  user   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  themes Theme[]
-}
-
-model Theme {
-  id         Int         @id @default(autoincrement())
-  name       String      @db.VarChar(255)
-  color      String      @db.Char(6)
-  folderId   Int
-  folder     Folder      @relation(fields: [folderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  flashcards Flashcard[]
+model Topic {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(255)
+  color       String      @db.Char(6)
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  topicId     Int?
+  parentTopic Topic?      @relation(name: "TopicToSubtopic", fields: [topicId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subTopics   Topic[]     @relation(name: "TopicToSubtopic")
+  flashcards  Flashcard[]
 }
 
 model Flashcard {
@@ -46,11 +40,11 @@ model Flashcard {
   question  String   @db.Text
   response  String   @db.Text
   createdAt DateTime @default(now())
-  themeId   Int
-  theme     Theme    @relation(fields: [themeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  topicId   Int
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model ThemeResponse {
+model TopicResponse {
   id                Int                 @id @default(autoincrement())
   rating            Int
   total             Int
@@ -63,5 +57,5 @@ model FlashcardResponse {
   rating      Int
   date        DateTime      @default(now())
   flashcardId Int
-  flashcard   ThemeResponse @relation(fields: [flashcardId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  flashcard   TopicResponse @relation(fields: [flashcardId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

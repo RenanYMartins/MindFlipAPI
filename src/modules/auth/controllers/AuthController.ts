@@ -1,5 +1,5 @@
 import { Controller } from '@shared/decorators/ControllerDecorator';
-import { Use } from '@shared/decorators/MiddlewareDecorator';
+import { Middleware } from '@shared/decorators/MiddlewareDecorator';
 import { Post } from '@shared/decorators/RouteDecorator';
 import { ValidationDTO } from '@shared/middlewares/ValidatonDTO';
 import { BaseController } from '@shared/models/BaseController';
@@ -12,10 +12,10 @@ import { LoginResponseDTO } from '../dto/response/LoginResponseDTO';
 
 @Controller('/')
 export class AuthController extends BaseController {
-    private service = new AuthService();
+    private readonly service = new AuthService();
 
     @Post('/')
-    @Use(ValidationDTO.validate(LoginRequestSchema))
+    @Middleware(ValidationDTO.validate(LoginRequestSchema))
     public async auth(req: Request, res: Response): Promise<void> {
         const dto = req.body as object as LoginRequestDTO;
         const result = await this.service.login(dto.email, dto.password);

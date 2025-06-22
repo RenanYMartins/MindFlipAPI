@@ -1,4 +1,4 @@
-import { AuthUser } from '../../model/auth-user.model';
+import { AuthUser } from '@shared/models/AuthUser';
 
 declare module 'express-serve-static-core' {
     interface Request {

@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { RequestHandler } from 'express';
 import { DecoratorMetadata } from '@shared/enums/DecoratorMetaEnum';
 
-export function Use(...middlewares: RequestHandler[]): MethodDecorator {
+export function Middleware(...middlewares: RequestHandler[]): MethodDecorator {
     return (target, propertyKey) => {
         Reflect.defineMetadata(DecoratorMetadata.MIDDLEWARES, middlewares, target, propertyKey);
     };

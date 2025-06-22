@@ -12,7 +12,7 @@ export class AuthMiddleware {
         const result = service.validate(req.headers.authorization!);
 
         if (result.isError) {
-            return ApiService.error(res, result.error!.status, result.error?.message!);
+            return ApiService.error(res, result.error!.status, result.error!.message);
         }
 
         req.user = result.value;

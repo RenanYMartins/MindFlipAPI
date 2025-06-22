@@ -1,3 +1,5 @@
+import { UserSummary } from './UserSummary';
+
 export class User {
     public id: number;
     public name: string;
@@ -13,4 +15,7 @@ export class User {
         this.createdAt = createdAt;
     }
 
+    public summary(): UserSummary {
+        return new UserSummary(this.id, this.name, this.email);
+    }
 }
