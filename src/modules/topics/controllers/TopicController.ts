@@ -47,5 +47,6 @@ export class TopicController extends BaseController {
     public async listTopicContent(req: Request, res: Response): Promise<void> {
         const params = req.params as object as TopicContentParamsRequestDTO;
         const query = req.query as object as TopicContentQueryRequestDTO;
+        ApiService.response(res, HttpStatus.OK, await this.service.getContent(params.id, req.user!.id));
     }
 }

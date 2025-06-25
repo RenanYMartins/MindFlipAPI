@@ -14,6 +14,20 @@ export class TopicService {
         return await this.repository.create(topic);
     }
 
+    public async getContent(topicId: number, userId: number): Promise<Result<Topic>> {
+        const topic = await this.repository.getById(topicId);
+
+        if (topic.isError) {
+            return Result.error(topic.error!);
+        }
+
+        if (topic.value!.user.id != userId) {
+            return Result.error(new HttpException(HttpStatus.FORBIDDEN, 'Acesso não autorizado a esse conteúdo'));
+        }
+
+        return topic;
+    }
+
     public async listAll(userId: number, page: number): Promise<PaginatedResult<Topic>> {
         const total = await this.repository.getTotal(userId);
 
