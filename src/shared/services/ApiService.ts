@@ -5,12 +5,7 @@ import { HttpException } from '../exceptions/HttpException';
 import { PaginatedResult } from '../models/PaginatedResult';
 
 export class ApiService {
-    static response<T, R>(
-        res: Response,
-        status: HttpStatus,
-        result: Result<T>,
-        wrapper?: new (value: T) => R
-    ): void {
+    static response<T, R>(res: Response, status: HttpStatus, result: Result<T>, wrapper?: new (value: T) => R): void {
         if (result.isError) {
             return this.error(res, result.error!.status || 500, result.error!.message);
         }
@@ -36,21 +31,21 @@ export class ApiService {
         });
     }
 
-    static paginatedResponse<T, E extends HttpException, R>(
+    static paginatedResponse<T, R>(
         res: Response,
         status: HttpStatus,
-        result: PaginatedResult<T, E>,
-        wrapper: new (value: T) => R
+        result: PaginatedResult<T>,
+        wrapper?: new (value: T) => R
     ) {
         if (result.isError) {
-            return this.error(res, result.error.status || 500, result.error.message);
+            return this.error(res, result.error!.status || 500, result.error!.message);
         }
 
         res.status(status).json({
             success: true,
             page: result.page,
             total: result.total,
-            data: result.value.map((item) => new wrapper(item))
+            data: result.value!.map((item) => (wrapper != null ? new wrapper(item) : item))
         });
     }
 }

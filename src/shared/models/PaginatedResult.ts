@@ -1,9 +1,11 @@
-export class PaginatedResult<T, E extends Error> {
+import { HttpException } from '@shared/exceptions/HttpException';
+
+export class PaginatedResult<T> {
     private readonly _success: boolean;
     private readonly _page?: number;
     private readonly _total?: number;
     private readonly _value?: T[];
-    private readonly _error?: E;
+    private readonly _error?: HttpException;
 
     private constructor({
         success,
@@ -16,7 +18,7 @@ export class PaginatedResult<T, E extends Error> {
         page?: number;
         total?: number;
         value?: T[];
-        error?: E;
+        error?: HttpException;
     }) {
         this._success = success;
         this._page = page;
@@ -25,8 +27,8 @@ export class PaginatedResult<T, E extends Error> {
         this._error = error;
     }
 
-    static ok<T>(data: { page: number; total: number; value: T[] }): PaginatedResult<T, never> {
-        return new PaginatedResult<T, never>({
+    static ok<T>(data: { page: number; total: number; value: T[] }): PaginatedResult<T> {
+        return new PaginatedResult<T>({
             success: true,
             page: data.page,
             total: data.total,
@@ -34,8 +36,8 @@ export class PaginatedResult<T, E extends Error> {
         });
     }
 
-    static error<E extends Error>(error: E): PaginatedResult<never, E> {
-        return new PaginatedResult<never, E>({ success: false, error: error });
+    static error(error: HttpException): PaginatedResult<never> {
+        return new PaginatedResult<never>({ success: false, error: error });
     }
 
     get isSuccess(): boolean {
@@ -54,21 +56,21 @@ export class PaginatedResult<T, E extends Error> {
         return this._total as number;
     }
 
-    get value(): T[] {
+    get value(): T[] | undefined {
         return this._value as T[];
     }
 
-    get error(): E {
-        return this._error as E;
+    get error(): HttpException | undefined {
+        return this._error;
     }
 
-    map<U>(fn: (value: T[]) => U[]): PaginatedResult<U, E> {
+    map<U>(fn: (value: T[]) => U[]): PaginatedResult<U> {
         return this._success
             ? PaginatedResult.ok({
-                page: this._page as number,
-                total: this._total as number,
-                value: fn(this._value as T[])
-            })
-            : PaginatedResult.error(this._error as E);
+                  page: this._page as number,
+                  total: this._total as number,
+                  value: fn(this._value as T[])
+              })
+            : PaginatedResult.error(this._error!);
     }
 }

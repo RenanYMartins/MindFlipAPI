@@ -27,7 +27,59 @@ export class TopicRepository {
             return Result.error(result.error!);
         }
 
-        const user = new UserAdapter().fromEntity(result.value![1]!);
-        return Result.ok(this.topicAdapter.fromEntity(result.value![0], user.summary()));
+        return Result.ok(this.topicAdapter.fromEntity({ topic: result.value![0]!, user: result.value![1]! }));
+    }
+
+    public async getById(topicId: number): Promise<void> {
+        const result = await this.db.execute((client) =>
+            client.topic.findUnique({
+                select: {
+                    subTopics: {
+                        include: {
+                            user: true
+                        }
+                    }
+                },
+                where: {
+                    id: topicId
+                }
+            })
+        );
+
+        return Result.map((topic) =>);
+    }
+
+    public async getAll(userId: number, skip: number, take: number): Promise<Result<Topic[]>> {
+        const result = await this.db.execute((client) =>
+            client.topic.findMany({
+                include: {
+                    user: true
+                },
+                where: {
+                    userId: userId,
+                    parentTopic: null
+                },
+                skip: skip,
+                take: take
+            })
+        );
+
+        if (result.isError) {
+            return Result.error(result.error!);
+        }
+
+        return Result.ok(
+            result.value!.map((topic) => this.topicAdapter.fromEntity({ topic: topic, user: topic.user }))
+        );
+    }
+
+    public async getTotal(userId: number): Promise<Result<{ _count: number }>> {
+        const result = await this.db.execute((client) => client.topic.aggregate({ _count: true }));
+
+        if (result.isError) {
+            return Result.error(result.error!);
+        }
+
+        return result;
     }
 }
