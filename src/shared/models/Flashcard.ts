@@ -3,7 +3,7 @@ export type FlashcardConstructor = {
     question: string;
     response: string;
     createdAt: Date;
-    themeId: number;
+    topicId: number;
 };
 
 export class Flashcard {
@@ -11,13 +11,13 @@ export class Flashcard {
     public question: string;
     public response: string;
     public createdAt: Date;
-    public themeId: number;
+    public topicId: number;
 
     public constructor(data: FlashcardConstructor) {
         this.id = data.id;
         this.question = data.question;
         this.response = data.response;
         this.createdAt = data.createdAt;
-        this.themeId = data.themeId;
+        this.topicId = data.topicId;
     }
 }

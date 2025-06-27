@@ -13,10 +13,11 @@ import { HttpStatus } from '@shared/enums/HttpStatusEnum';
 import { ListTopicsRequestDTO, ListTopicsRequestSchema } from '../dto/request/ListTopicsRequestDTO';
 import { ListTopicResponseDTO } from '../dto/response/ListTopicResponseDTO';
 import {
-    TopicContentParamsRequestDTO,
-    TopicContentQueryRequestDTO,
-    TopicContentRequestSchema
-} from '../dto/request/TopicContentRequestDTO';
+    ListSubTopicsParamsRequestDTO,
+    ListSubTopicsQueryRequestDTO,
+    ListSubtopicsRequestSchema
+} from '../dto/request/ListSubTopicsRequestDTO';
+import { ListSubTopicResponseDTO } from '../dto/response/ListSubTopicResponseDTO';
 
 @Controller('/')
 export class TopicController extends BaseController {
@@ -42,11 +43,16 @@ export class TopicController extends BaseController {
         );
     }
 
-    @Get('/content/:id')
-    @Middleware(AuthMiddleware.validate, ValidationDTO.validate(TopicContentRequestSchema))
-    public async listTopicContent(req: Request, res: Response): Promise<void> {
-        const params = req.params as object as TopicContentParamsRequestDTO;
-        const query = req.query as object as TopicContentQueryRequestDTO;
-        ApiService.response(res, HttpStatus.OK, await this.service.getContent(params.id, req.user!.id));
+    @Get('/:id/subtopic')
+    @Middleware(AuthMiddleware.validate, ValidationDTO.validate(ListSubtopicsRequestSchema))
+    public async listTopicSubTopics(req: Request, res: Response): Promise<void> {
+        const params = req.params as object as ListSubTopicsParamsRequestDTO;
+        const query = req.query as object as ListSubTopicsQueryRequestDTO;
+        ApiService.paginatedResponse(
+            res,
+            HttpStatus.OK,
+            await this.service.getSubTopics(params.id, req.user!.id, query.page),
+            ListSubTopicResponseDTO
+        );
     }
 }

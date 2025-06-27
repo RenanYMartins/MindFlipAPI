@@ -2,16 +2,15 @@ import { ModuleComposite } from '@shared/composites/ModuleComposite';
 import { RouterFactory } from '@shared/factories/RouterFactory';
 import { BaseControllerConstructor } from '@shared/models/BaseController';
 import { Router } from 'express';
-import { TopicController } from './controllers/TopicController';
-import { FlashcardModuleV1 } from './modules/flashcard/FlashcardModuleV1';
+import { FlashcardController } from './controllers/FlashcardController';
 
-export class TopicModuleV1 implements ModuleComposite {
+export class FlashcardModuleV1 implements ModuleComposite {
     private children: ModuleComposite[];
     private controllers: BaseControllerConstructor[];
 
     public constructor() {
-        this.children = [new FlashcardModuleV1()];
-        this.controllers = [TopicController];
+        this.children = [];
+        this.controllers = [FlashcardController];
     }
 
     addChildren(...module: ModuleComposite[]): void {
@@ -24,10 +23,10 @@ export class TopicModuleV1 implements ModuleComposite {
 
     buildRoutes(): Router {
         const router = Router();
-        router.use('/v1/topic', new RouterFactory(this.controllers).build());
+        router.use('/flashcard', new RouterFactory(this.controllers).build());
 
         for (const module of this.children) {
-            router.use('/v1/topic', module.buildRoutes());
+            router.use('/flashcard', module.buildRoutes());
         }
 
         return router;

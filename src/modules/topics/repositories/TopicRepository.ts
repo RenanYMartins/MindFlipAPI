@@ -2,7 +2,6 @@ import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
 import { CreateTopic } from '../models/CreateTopic';
 import { Result } from '@shared/models/Result';
 import { TopicAdapter } from '@shared/adapters/TopicAdapter';
-import { Topic as TopicEntity } from '@/generated/prisma';
 import { Topic } from '@shared/models/Topic';
 
 export class TopicRepository {
@@ -34,11 +33,6 @@ export class TopicRepository {
         const result = await this.db.execute((client) =>
             client.topic.findUnique({
                 include: {
-                    subTopics: {
-                        include: {
-                            user: true
-                        }
-                    },
                     user: true
                 },
                 where: {
@@ -52,6 +46,54 @@ export class TopicRepository {
         }
 
         return Result.ok(this.topicAdapter.fromEntity(result.value!));
+    }
+
+    public async getSubTopicsById(topicId: number, skip: number, take: number): Promise<Result<Topic[]>> {
+        const result = await this.db.execute((client) =>
+            client.topic.findUnique({
+                select: {
+                    subTopics: {
+                        include: {
+                            user: true
+                        },
+                        skip: skip,
+                        take: take
+                    }
+                },
+                where: {
+                    id: topicId
+                }
+            })
+        );
+
+        if (result.isError) {
+            return Result.error(result.error!);
+        }
+
+        return Result.ok(result.value!.subTopics.map((topic) => this.topicAdapter.fromEntity(topic)));
+    }
+
+    public async getSubTopicsTotal(topicId: number): Promise<Result<{ total: number }>> {
+        const result = await this.db.execute((client) =>
+            client.topic.findUnique({
+                select: {
+                    _count: {
+                        select: {
+                            subTopics: true
+                        }
+                    }
+                },
+                where: {
+                    id: topicId
+                }
+            })
+        );
+
+        if (result.isError) {
+            return Result.error(result.error!);
+        }
+
+        return Result.ok({ total: result.value!._count.subTopics });
     }
 
     public async getAll(userId: number, skip: number, take: number): Promise<Result<Topic[]>> {
@@ -76,13 +118,15 @@ export class TopicRepository {
         return Result.ok(result.value!.map((topic) => this.topicAdapter.fromEntity(topic)));
     }
 
-    public async getTotal(userId: number): Promise<Result<{ _count: number }>> {
-        const result = await this.db.execute((client) => client.topic.aggregate({ _count: true }));
+    public async getTotal(userId: number): Promise<Result<{ total: number }>> {
+        const result = await this.db.execute((client) =>
+            client.topic.count({ where: { parentTopic: null, userId: userId } })
+        );
 
         if (result.isError) {
             return Result.error(result.error!);
         }
 
-        return result;
+        return Result.ok({ total: result.value! });
     }
 }

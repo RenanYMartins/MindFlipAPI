@@ -2,9 +2,8 @@ import { Result } from '@shared/models/Result';
 import { CreateTopic } from '../models/CreateTopic';
 import { TopicRepository } from '../repositories/TopicRepository';
 import { Topic } from '@shared/models/Topic';
-import { PaginatedResult } from '@shared/models/PaginatedResult';
-import { HttpException } from '@shared/exceptions/HttpException';
-import { HttpStatus } from '@shared/enums/HttpStatusEnum';
+import { BaseException } from '@shared/enums/BaseExceptionEnum';
+import { PaginatedResponse } from '@shared/models/PaginatedResponse';
 
 export class TopicService {
     private readonly itemsPerPage = 30;
@@ -14,7 +13,11 @@ export class TopicService {
         return await this.repository.create(topic);
     }
 
-    public async getContent(topicId: number, userId: number): Promise<Result<Topic>> {
+    public async getSubTopics(
+        topicId: number,
+        userId: number,
+        page: number
+    ): Promise<Result<PaginatedResponse<Topic>>> {
         const topic = await this.repository.getById(topicId);
 
         if (topic.isError) {
@@ -22,33 +25,61 @@ export class TopicService {
         }
 
         if (topic.value!.user.id != userId) {
-            return Result.error(new HttpException(HttpStatus.FORBIDDEN, 'Acesso não autorizado a esse conteúdo'));
+            return BaseException.forbidden;
         }
 
-        return topic;
+        const total = await this.repository.getSubTopicsTotal(topicId);
+        if (total.isError) {
+            return Result.error(total.error!);
+        }
+
+        const totalPages = Math.ceil(total.value!.total / this.itemsPerPage);
+        if (page > totalPages) {
+            return BaseException.pageNotFound;
+        }
+
+        const subTopics = await this.repository.getSubTopicsById(
+            topicId,
+            (page - 1) * this.itemsPerPage,
+            this.itemsPerPage
+        );
+
+        if (subTopics.isError) {
+            return Result.error(subTopics.error!);
+        }
+
+        return Result.ok(
+            new PaginatedResponse({
+                page: page,
+                total: totalPages,
+                value: subTopics.value!
+            })
+        );
     }
 
-    public async listAll(userId: number, page: number): Promise<PaginatedResult<Topic>> {
+    public async listAll(userId: number, page: number): Promise<Result<PaginatedResponse<Topic>>> {
         const total = await this.repository.getTotal(userId);
 
         if (total.isError) {
-            return PaginatedResult.error(total.error!);
+            return Result.error(total.error!);
         }
 
-        const totalPages = Math.ceil(total.value!._count / this.itemsPerPage);
+        const totalPages = Math.max(Math.ceil(total.value!.total / this.itemsPerPage), 1);
         if (page > totalPages) {
-            return PaginatedResult.error(new HttpException(HttpStatus.NOT_FOUND, 'Página não encontrada'));
+            return BaseException.pageNotFound;
         }
 
         const topics = await this.repository.getAll(userId, (page - 1) * this.itemsPerPage, this.itemsPerPage);
         if (topics.isError) {
-            return PaginatedResult.error(topics.error!);
+            return Result.error(topics.error!);
         }
 
-        return PaginatedResult.ok({
-            page: page,
-            total: totalPages,
-            value: topics.value!
-        });
+        return Result.ok(
+            new PaginatedResponse({
+                page: page,
+                total: totalPages,
+                value: topics.value!
+            })
+        );
     }
 }

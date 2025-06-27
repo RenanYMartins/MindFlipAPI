@@ -1,8 +1,7 @@
 import { Response } from 'express';
 import { HttpStatus } from '../enums/HttpStatusEnum';
 import { Result } from '../models/Result';
-import { HttpException } from '../exceptions/HttpException';
-import { PaginatedResult } from '../models/PaginatedResult';
+import { PaginatedResponse } from '@shared/models/PaginatedResponse';
 
 export class ApiService {
     static response<T, R>(res: Response, status: HttpStatus, result: Result<T>, wrapper?: new (value: T) => R): void {
@@ -34,7 +33,7 @@ export class ApiService {
     static paginatedResponse<T, R>(
         res: Response,
         status: HttpStatus,
-        result: PaginatedResult<T>,
+        result: Result<PaginatedResponse<T>>,
         wrapper?: new (value: T) => R
     ) {
         if (result.isError) {
@@ -43,9 +42,9 @@ export class ApiService {
 
         res.status(status).json({
             success: true,
-            page: result.page,
-            total: result.total,
-            data: result.value!.map((item) => (wrapper != null ? new wrapper(item) : item))
+            page: result.value!.page,
+            total: result.value!.total,
+            data: result.value!.value!.map((item) => (wrapper != null ? new wrapper(item) : item))
         });
     }
 }
