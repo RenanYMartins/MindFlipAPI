@@ -1,4 +1,4 @@
-import { JwtService } from '@shared/services/JwtService';
+import { JwtFacade } from '@shared/facades/JwtFacade';
 import { AuthRepository } from '../repositories/AuthRepository';
 import { AuthUser } from '@shared/models/AuthUser';
 import { Result } from '@shared/models/Result';
@@ -7,11 +7,11 @@ import { HttpStatus } from '@shared/enums/HttpStatusEnum';
 
 export class AuthService {
     private repository: AuthRepository;
-    private jwt: JwtService;
+    private jwt: JwtFacade;
 
     public constructor() {
         this.repository = new AuthRepository();
-        this.jwt = new JwtService();
+        this.jwt = new JwtFacade();
     }
 
     public async login(email: string, password: string): Promise<Result<string>> {
@@ -22,9 +22,7 @@ export class AuthService {
         }
 
         if (user.value == null) {
-            return Result.error(
-                new HttpException(HttpStatus.UNAUTHORIZED, 'Email e/ou senha inválidos')
-            );
+            return Result.error(new HttpException(HttpStatus.UNAUTHORIZED, 'Email e/ou senha inválidos'));
         }
 
         return Result.ok(

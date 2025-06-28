@@ -4,5 +4,6 @@ import { Result } from '@shared/models/Result';
 
 export const BaseException = {
     pageNotFound: Result.error(new HttpException(HttpStatus.NOT_FOUND, 'Página não encontrada')),
-    forbidden: Result.error(new HttpException(HttpStatus.FORBIDDEN, 'Acesso não autorizado a esse conteúdo'))
+    forbidden: Result.error(new HttpException(HttpStatus.FORBIDDEN, 'Acesso não autorizado a esse conteúdo')),
+    notFound: (item: string) => Result.error(new HttpException(HttpStatus.NOT_FOUND, `${item} inválido`))
 };

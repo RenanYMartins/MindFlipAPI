@@ -15,24 +15,26 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  email     String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  createdAt DateTime  @default(now())
   topics    Topic[]
+  Actions   Actions[]
 }
 
 model Topic {
-  id          Int         @id @default(autoincrement())
-  name        String      @db.VarChar(255)
-  color       String      @db.Char(6)
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(255)
+  color       String        @db.Char(6)
   userId      Int
-  user        User        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   topicId     Int?
-  parentTopic Topic?      @relation(name: "TopicToSubtopic", fields: [topicId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  subTopics   Topic[]     @relation(name: "TopicToSubtopic")
+  parentTopic Topic?        @relation(name: "TopicToSubtopic", fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  subTopics   Topic[]       @relation(name: "TopicToSubtopic")
   flashcards  Flashcard[]
+  TopicReview TopicReview[]
 }
 
 model Flashcard {
@@ -41,21 +43,32 @@ model Flashcard {
   response  String   @db.Text
   createdAt DateTime @default(now())
   topicId   Int
-  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-model TopicResponse {
-  id                Int                 @id @default(autoincrement())
-  rating            Int
-  total             Int
-  date              DateTime            @default(now())
-  flashcardResponse FlashcardResponse[]
+model TopicReview {
+  id              Int               @id @default(autoincrement())
+  topicId         Int
+  rating          Int
+  total           Int
+  date            DateTime          @default(now())
+  topic           Topic             @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  flashcardReview FlashcardReview[]
 }
 
-model FlashcardResponse {
-  id          Int           @id @default(autoincrement())
+model FlashcardReview {
+  id          Int         @id @default(autoincrement())
   rating      Int
-  date        DateTime      @default(now())
+  date        DateTime    @default(now())
   flashcardId Int
-  flashcard   TopicResponse @relation(fields: [flashcardId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  flashcard   TopicReview @relation(fields: [flashcardId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
+
+model Actions {
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  createAt DateTime @default(now())
+}
+
+model FlashcardAction {}

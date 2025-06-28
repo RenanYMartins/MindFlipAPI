@@ -29,7 +29,7 @@ export class TopicRepository {
         return Result.ok(this.topicAdapter.fromEntity({ ...result.value![0], user: result.value![1]! }));
     }
 
-    public async getById(topicId: number): Promise<Result<Topic>> {
+    public async getById(topicId: number): Promise<Result<Topic | null>> {
         const result = await this.db.execute((client) =>
             client.topic.findUnique({
                 include: {
@@ -45,7 +45,7 @@ export class TopicRepository {
             return Result.error(result.error!);
         }
 
-        return Result.ok(this.topicAdapter.fromEntity(result.value!));
+        return Result.ok(result.value != null ? this.topicAdapter.fromEntity(result.value) : null);
     }
 
     public async getSubTopicsById(topicId: number, skip: number, take: number): Promise<Result<Topic[]>> {
