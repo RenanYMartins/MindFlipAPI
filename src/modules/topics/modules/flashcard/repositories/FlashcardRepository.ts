@@ -11,7 +11,12 @@ export class FlashcardRepository {
     public async create(flashcard: CreateFlashcard): Promise<Result<Flashcard>> {
         const result = await this.db.execute((client) =>
             client.flashcard.create({
-                data: { question: flashcard.question, response: flashcard.response, topicId: flashcard.topicId }
+                data: {
+                    question: flashcard.question,
+                    response: flashcard.response,
+                    color: flashcard.color,
+                    topicId: flashcard.topicId
+                }
             })
         );
 

@@ -7,6 +7,7 @@ export class FlashcardAdapter {
             id: entity.id,
             question: entity.question,
             response: entity.response,
+            color: entity.color,
             createdAt: entity.createdAt,
             topicId: entity.topicId
         });

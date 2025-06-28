@@ -24,7 +24,7 @@ export class FlashcardController extends BaseController {
     @Middleware(AuthMiddleware.validate, ValidationDTO.validate(CreateFlashcardRequestSchema))
     public async create(req: Request, res: Response): Promise<void> {
         const dto = req.body as CreateFlashcardRequestDTO;
-        const flashcard = new CreateFlashcard(dto.question, dto.response, dto.topicId, req.user!.id);
+        const flashcard = new CreateFlashcard(dto.question, dto.response, dto.color, dto.topicId, req.user!.id);
         ApiService.response(res, HttpStatus.CREATED, await this.service.create(flashcard));
     }
 
