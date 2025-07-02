@@ -4,13 +4,16 @@ import { TopicRepository } from '../repositories/TopicRepository';
 import { Topic } from '@shared/models/Topic';
 import { BaseException } from '@shared/enums/BaseExceptionEnum';
 import { PaginatedResponse } from '@shared/models/PaginatedResponse';
+import { SaveCommand } from '@shared/commands/SaveCommand';
+import { CommandTarget } from '@shared/enums/CommandTargetEnum';
 
 export class TopicService {
     private readonly itemsPerPage = 30;
     private readonly repository = new TopicRepository();
 
     public async create(topic: CreateTopic): Promise<Result<Topic>> {
-        return await this.repository.create(topic);
+        const command = new SaveCommand(this.repository);
+        return await command.execute(topic, CommandTarget.topic, topic.userId);
     }
 
     public async getSubTopics(
