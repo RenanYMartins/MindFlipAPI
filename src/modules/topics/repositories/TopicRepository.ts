@@ -7,6 +7,7 @@ import { IActionRepository } from '@shared/interfaces/IActionRepository';
 import { PrismaClient } from '@/generated/prisma';
 import { Action } from '@shared/models/Action';
 import { TopicActionAdapter } from '@shared/adapters/TopicActionAdapter';
+import { UpdateTopic } from '../models/UpdateTopic';
 
 export class TopicRepository implements IActionRepository<Topic> {
     private readonly db = DatabaseSingleton.getInstance();
@@ -32,6 +33,34 @@ export class TopicRepository implements IActionRepository<Topic> {
         }
 
         return Result.ok(this.adapter.fromEntity({ ...result.value![0], user: result.value![1]! }));
+    }
+
+    public async update(topic: UpdateTopic): Promise<Result<Topic>> {
+        const result = await this.db.execute((client) =>
+            client.topic.update({
+                data: { name: topic.name, color: topic.color, topicId: topic.parentTopic },
+                where: { id: topic.id },
+                include: { user: true }
+            })
+        );
+
+        if (result.isError) {
+            return Result.error(result.error!);
+        }
+
+        return Result.ok(this.adapter.fromEntity(result.value!));
+    }
+
+    public async deleteById(topicId: number): Promise<Result<Topic>> {
+        const result = await this.db.execute((client) =>
+            client.topic.delete({ where: { id: topicId }, include: { user: true } })
+        );
+
+        if (result.isError) {
+            return Result.error(result.error!);
+        }
+
+        return Result.ok(this.adapter.fromEntity(result.value!));
     }
 
     public async getById(topicId: number): Promise<Result<Topic | null>> {
@@ -62,7 +91,10 @@ export class TopicRepository implements IActionRepository<Topic> {
                             user: true
                         },
                         skip: skip,
-                        take: take
+                        take: take,
+                        orderBy: {
+                            id: 'desc'
+                        }
                     }
                 },
                 where: {
@@ -110,6 +142,9 @@ export class TopicRepository implements IActionRepository<Topic> {
                 where: {
                     userId: userId,
                     parentTopic: null
+                },
+                orderBy: {
+                    id: 'desc'
                 },
                 skip: skip,
                 take: take

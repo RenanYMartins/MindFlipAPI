@@ -6,6 +6,7 @@ import { BaseException } from '@shared/enums/BaseExceptionEnum';
 import { PaginatedResponse } from '@shared/models/PaginatedResponse';
 import { SaveCommand } from '@shared/commands/SaveCommand';
 import { CommandTarget } from '@shared/enums/CommandTargetEnum';
+import { UpdateTopic } from '../models/UpdateTopic';
 
 export class TopicService {
     private readonly itemsPerPage = 30;
@@ -14,6 +15,34 @@ export class TopicService {
     public async create(topic: CreateTopic): Promise<Result<Topic>> {
         const command = new SaveCommand(this.repository);
         return await command.execute(topic, CommandTarget.topic, topic.userId);
+    }
+
+    public async update(topic: UpdateTopic): Promise<Result<Topic>> {
+        const exists = await this.repository.getById(topic.id);
+
+        if (exists.isError || exists.value == null) {
+            return exists.isError ? Result.error(exists.error!) : BaseException.notFound('topic');
+        }
+
+        if (exists.value!.user.id != topic.userId) {
+            return BaseException.forbidden;
+        }
+
+        return await this.repository.update(topic);
+    }
+
+    public async deleteById(topicId: number, userId: number): Promise<Result<Topic>> {
+        const exists = await this.repository.getById(topicId);
+
+        if (exists.isError || exists.value == null) {
+            return exists.isError ? Result.error(exists.error!) : BaseException.notFound('topic');
+        }
+
+        if (exists.value!.user.id != userId) {
+            return BaseException.forbidden;
+        }
+
+        return await this.repository.deleteById(topicId);
     }
 
     public async getSubTopics(

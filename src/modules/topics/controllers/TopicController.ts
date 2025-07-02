@@ -1,6 +1,6 @@
 import { Controller } from '@shared/decorators/ControllerDecorator';
 import { Middleware } from '@shared/decorators/MiddlewareDecorator';
-import { Get, Post } from '@shared/decorators/RouteDecorator';
+import { Delete, Get, Post, Put } from '@shared/decorators/RouteDecorator';
 import { AuthMiddleware } from '@shared/middlewares/AuthMiddleware';
 import { ValidationDTO } from '@shared/middlewares/ValidatonDTO';
 import { BaseController } from '@shared/models/BaseController';
@@ -18,6 +18,9 @@ import {
     ListSubtopicsRequestSchema
 } from '../dto/request/ListSubTopicsRequestDTO';
 import { ListSubTopicResponseDTO } from '../dto/response/ListSubTopicResponseDTO';
+import { UpdateTopicRequestDTO, UpdateTopicRequestSchema } from '../dto/request/UpdateTopicRequestDTO';
+import { UpdateTopic } from '../models/UpdateTopic';
+import { DeleteTopicRequestDTO, DeleteTopicRequestSchema } from '../dto/request/DeleteTopicRequestDTO';
 
 @Controller('/')
 export class TopicController extends BaseController {
@@ -41,6 +44,21 @@ export class TopicController extends BaseController {
             await this.service.listAll(req.user!.id, dto.page),
             ListTopicResponseDTO
         );
+    }
+
+    @Put('/')
+    @Middleware(AuthMiddleware.validate, ValidationDTO.validate(UpdateTopicRequestSchema))
+    public async update(req: Request, res: Response): Promise<void> {
+        const dto = req.body as UpdateTopicRequestDTO;
+        const topic = new UpdateTopic({ ...dto, userId: req.user!.id });
+        ApiService.response(res, HttpStatus.OK, await this.service.update(topic));
+    }
+
+    @Delete('/:id')
+    @Middleware(AuthMiddleware.validate, ValidationDTO.validate(DeleteTopicRequestSchema))
+    public async delete(req: Request, res: Response): Promise<void> {
+        const dto = req.params as object as DeleteTopicRequestDTO;
+        ApiService.response(res, HttpStatus.ACCEPTED, await this.service.deleteById(dto.id, req.user!.id));
     }
 
     @Get('/:id/subtopic')
