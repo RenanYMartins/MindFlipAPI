@@ -1,12 +1,13 @@
 import { PaginatedResponse } from '@shared/models/PaginatedResponse';
 import { FlashcardRepository } from '../repositories/FlashcardRepository';
-import { Flashcard } from '@/generated/prisma';
 import { BaseException } from '@shared/enums/BaseExceptionEnum';
 import { TopicRepository } from '../../../repositories/TopicRepository';
 import { Result } from '@shared/models/Result';
 import { CreateFlashcard } from '../models/CreateFlashcard';
 import { SaveCommand } from '@shared/commands/SaveCommand';
 import { CommandTarget } from '@shared/enums/CommandTargetEnum';
+import { UpdateFlashcard } from '../models/UpdateFlashcard';
+import { Flashcard } from '@shared/models/Flashcard';
 
 export class FlashcardService {
     private readonly topicRepo = new TopicRepository();
@@ -32,6 +33,34 @@ export class FlashcardService {
         return await command.execute(flashcard, CommandTarget.flashcard, flashcard.userId);
     }
 
+    public async update(flashcard: UpdateFlashcard): Promise<Result<Flashcard>> {
+        const owner = await this.cardRepo.getOwner(flashcard.id);
+
+        if (owner.isError || owner.value == null) {
+            return owner.isError ? Result.error(owner.error!) : BaseException.notFound('flashcard');
+        }
+
+        if (owner.value!.id != flashcard.userId) {
+            return BaseException.forbidden;
+        }
+
+        return await this.cardRepo.update(flashcard);
+    }
+
+    public async deleteById(flashcardId: number, userId: number): Promise<Result<Flashcard>> {
+        const owner = await this.cardRepo.getOwner(flashcardId);
+
+        if (owner.isError || owner.value == null) {
+            return owner.isError ? Result.error(owner.error!) : BaseException.notFound('flashcard');
+        }
+
+        if (owner.value!.id != userId) {
+            return BaseException.forbidden;
+        }
+
+        return await this.cardRepo.deleteById(flashcardId);
+    }
+
     public async listAll(
         subTopicId: number,
         userId: number,
@@ -40,6 +69,10 @@ export class FlashcardService {
         const subTopic = await this.topicRepo.getById(subTopicId);
         if (subTopic.isError) {
             return Result.error(subTopic.error!);
+        }
+
+        if (subTopic.value == null) {
+            return BaseException.notFound('topic');
         }
 
         if (subTopic.value?.user.id != userId) {
