@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "35b80efc-12da-4d15-9092-237eb797915e",
+		"name": "MindFlip",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27560887"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"teste@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/v1/auth",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ruhan\",\r\n    \"email\": \"teste@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/v1/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Undo",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/action/undo",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"action",
+						"undo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Topic Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Teste\",\r\n    \"color\": \"123123\",\r\n    \"parentTopic\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/v1/topic",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Topic List",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/topic",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Topic Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"abc\",\r\n    \"color\": \"111111\",\r\n    \"parentTopic\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/v1/topic",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Topic Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/topic/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SubTopics List",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/topic/1/subtopic",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic",
+						"1",
+						"subtopic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flashcard Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"question\": \"Questão\",\r\n    \"response\": \"Resposta\",\r\n    \"color\": \"123456\",\r\n    \"topicId\": 7\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/v1/topic/flashcard",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic",
+						"flashcard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flashcard List By Topic",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/topic/flashcard/subtopic/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic",
+						"flashcard",
+						"subtopic",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flashcard Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 7,\r\n    \"question\": \"Questão teste\",\r\n    \"response\": \"Resposta\",\r\n    \"color\": \"123456\",\r\n    \"topicId\": 6\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/v1/topic/flashcard",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic",
+						"flashcard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flashcard Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 7,\r\n    \"question\": \"Questão\",\r\n    \"response\": \"Resposta\",\r\n    \"color\": \"123456\",\r\n    \"topicId\": 7\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/v1/topic/flashcard/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"topic",
+						"flashcard",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "6"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
