@@ -21,10 +21,11 @@ import { ListSubTopicResponseDTO } from '../dto/response/ListSubTopicResponseDTO
 import { UpdateTopicRequestDTO, UpdateTopicRequestSchema } from '../dto/request/UpdateTopicRequestDTO';
 import { UpdateTopic } from '../models/UpdateTopic';
 import { DeleteTopicRequestDTO, DeleteTopicRequestSchema } from '../dto/request/DeleteTopicRequestDTO';
+import { TopicRepository } from '../repositories/TopicRepository';
 
 @Controller('/')
 export class TopicController extends BaseController {
-    private readonly service = new TopicService();
+    private readonly service = new TopicService(new TopicRepository());
 
     @Post('/')
     @Middleware(AuthMiddleware.validate, ValidationDTO.validate(CreateTopicRequestSchema))

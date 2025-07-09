@@ -1,5 +1,4 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { HttpStatus } from '@shared/enums/HttpStatusEnum';
 import { HttpException } from '@shared/exceptions/HttpException';
 import { Result } from '@shared/models/Result';

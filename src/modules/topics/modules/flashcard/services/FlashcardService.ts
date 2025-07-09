@@ -10,9 +10,12 @@ import { UpdateFlashcard } from '../models/UpdateFlashcard';
 import { Flashcard } from '@shared/models/Flashcard';
 
 export class FlashcardService {
-    private readonly topicRepo = new TopicRepository();
-    private readonly cardRepo = new FlashcardRepository();
     private readonly itemsPerPage = 30;
+
+    public constructor(
+        private readonly topicRepo: TopicRepository,
+        private readonly cardRepo: FlashcardRepository
+    ) {}
 
     public async create(flashcard: CreateFlashcard): Promise<Result<Flashcard>> {
         const command = new SaveCommand(this.cardRepo);

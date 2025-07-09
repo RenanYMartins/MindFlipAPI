@@ -10,7 +10,8 @@ import { UpdateTopic } from '../models/UpdateTopic';
 
 export class TopicService {
     private readonly itemsPerPage = 30;
-    private readonly repository = new TopicRepository();
+
+    public constructor(private readonly repository: TopicRepository) {}
 
     public async create(topic: CreateTopic): Promise<Result<Topic>> {
         const command = new SaveCommand(this.repository);

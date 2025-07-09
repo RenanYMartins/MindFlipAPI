@@ -18,10 +18,12 @@ import { Controller } from '@shared/decorators/ControllerDecorator';
 import { UpdateFlashcardRequestDTO, UpdateFlashcardRequestSchema } from '../dto/request/UpdateFlashcardRequestDTO';
 import { UpdateFlashcard } from '../models/UpdateFlashcard';
 import { DeleteFlashcardRequestDTO, DeleteFlashcardRequestSchema } from '../dto/request/DeleteFlashcardRequestDTO';
+import { TopicRepository } from '@modules/topics/repositories/TopicRepository';
+import { FlashcardRepository } from '../repositories/FlashcardRepository';
 
 @Controller('/')
 export class FlashcardController extends BaseController {
-    private readonly service = new FlashcardService();
+    private readonly service = new FlashcardService(new TopicRepository(), new FlashcardRepository());
 
     @Post('/')
     @Middleware(AuthMiddleware.validate, ValidationDTO.validate(CreateFlashcardRequestSchema))

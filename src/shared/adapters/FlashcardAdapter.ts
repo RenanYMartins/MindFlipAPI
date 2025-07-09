@@ -1,4 +1,4 @@
-import { Flashcard as FlashcardEntity } from '@/generated/prisma';
+import { Flashcard as FlashcardEntity } from '@prisma/client';
 import { Flashcard } from '@shared/models/Flashcard';
 
 export class FlashcardAdapter {

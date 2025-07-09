@@ -5,7 +5,8 @@ import { pathsToModuleNameMapper } from 'ts-jest';
 const config: Config = {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    testMatch: ['**/tests/**/*Test.ts'], // Onde seus testes estão localizados
+    setupFiles: ['<rootDir>/tests/TestSetup.ts'],
+    testMatch: ['**/tests/**/*Test.ts'],
     moduleFileExtensions: ['ts', 'js', 'json'],
     clearMocks: true,
     collectCoverage: false,

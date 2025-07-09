@@ -1,5 +1,5 @@
 import { User } from '@shared/models/User';
-import { User as UserEntity } from '@/generated/prisma';
+import { User as UserEntity } from '@prisma/client';
 
 export class UserAdapter {
     public fromEntity(entity: UserEntity): User {

@@ -5,20 +5,21 @@ import { HttpException } from '@shared/exceptions/HttpException';
 import { IUndoStrategy } from '@shared/interfaces/IUndoStrategy';
 import { Result } from '@shared/models/Result';
 import { ActionRepository } from '@shared/repositories/ActionRepository';
-import { UndoFlashcardStrategy } from '@shared/strategies/UndoFlashcardStrategy';
-import { UndoTopicStrategy } from '@shared/strategies/UndoTopicStrategy';
 
 export class ActionService {
-    private readonly repository = new ActionRepository();
-    private readonly undoStrategies = new Map<CommandTarget, IUndoStrategy<unknown>>([
-        [CommandTarget.flashcard, new UndoFlashcardStrategy()],
-        [CommandTarget.topic, new UndoTopicStrategy()]
-    ]);
+    public constructor(
+        private readonly repository: ActionRepository,
+        private readonly undoStrategies: Map<CommandTarget, IUndoStrategy<unknown>>
+    ) {}
 
     public async undo(userId: number): Promise<Result<unknown>> {
         const action = await this.repository.getLast(userId);
 
-        if (action.isSuccess && action.value == null) {
+        if (action.isError) {
+            return Result.error(action.error!);
+        }
+
+        if (action.value == null) {
             return Result.error(new HttpException(HttpStatus.NOT_FOUND, 'Nenhuma ação foi encontrada'));
         }
 

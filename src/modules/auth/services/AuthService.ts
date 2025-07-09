@@ -6,13 +6,10 @@ import { HttpException } from '@shared/exceptions/HttpException';
 import { HttpStatus } from '@shared/enums/HttpStatusEnum';
 
 export class AuthService {
-    private repository: AuthRepository;
-    private jwt: JwtFacade;
-
-    public constructor() {
-        this.repository = new AuthRepository();
-        this.jwt = new JwtFacade();
-    }
+    public constructor(
+        private readonly repository: AuthRepository,
+        private readonly jwt: JwtFacade
+    ) {}
 
     public async login(email: string, password: string): Promise<Result<string>> {
         const user = await this.repository.login(email, password);

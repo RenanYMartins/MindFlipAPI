@@ -1,8 +1,8 @@
-import { DatabaseSingleton } from "@/src/config/DatabaseSingleton";
-import { UserAdapter } from "@shared/adapters/UserAdapter";
-import { CreateUser } from "@/src/modules/user/models/CreateUser";
-import { Result } from "@shared/models/Result";
-import { User } from "@shared/models/User";
+import { DatabaseSingleton } from '@config/DatabaseSingleton';
+import { UserAdapter } from '@shared/adapters/UserAdapter';
+import { Result } from '@shared/models/Result';
+import { User } from '@shared/models/User';
+import { CreateUser } from '../models/CreateUser';
 
 export class UserRepository {
     private readonly db = DatabaseSingleton.getInstance();

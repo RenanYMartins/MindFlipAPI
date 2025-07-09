@@ -1,5 +1,5 @@
 import { Topic } from '@shared/models/Topic';
-import { Topic as TopicEntity, User as UserEntity } from '@/generated/prisma';
+import { Topic as TopicEntity, User as UserEntity } from '@prisma/client';
 import { UserAdapter } from './UserAdapter';
 
 export class TopicAdapter {

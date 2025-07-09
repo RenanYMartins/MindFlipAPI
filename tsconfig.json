@@ -4,11 +4,13 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "CommonJS",
-    "rootDir": "./src",
+    "rootDir": "./",
     "baseUrl": "./",
     "paths": {
       "@shared/*": ["src/shared/*"],
-      "@/*": ["*"]
+      "@config/*": ["src/config/*"],
+      "@modules/*": ["src/modules/*"],
+      "@tests/*": ["tests/*"]
     },
     "typeRoots": ["./src/shared/types"],
     "resolveJsonModule": true,
@@ -19,6 +21,6 @@
     "noImplicitAny": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "tests"],
+  "exclude": ["node_modules", "dist"]
 }

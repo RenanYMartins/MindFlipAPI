@@ -8,9 +8,9 @@
 
 # Typescript build output
 /dist
+*.tsbuildinfo
 
-# Prisma build
-generated/prisma
+# Prisma output
 prisma/migrations
 
 # IDE

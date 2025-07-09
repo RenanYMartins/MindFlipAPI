@@ -1,4 +1,4 @@
-import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
+import { DatabaseSingleton } from '@config/DatabaseSingleton';
 import { FlashcardAdapter } from '@shared/adapters/FlashcardAdapter';
 import { Flashcard } from '@shared/models/Flashcard';
 import { Result } from '@shared/models/Result';

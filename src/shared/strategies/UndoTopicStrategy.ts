@@ -1,4 +1,4 @@
-import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
+import { DatabaseSingleton } from '@config/DatabaseSingleton';
 import { TopicAdapter } from '@shared/adapters/TopicAdapter';
 import { BaseException } from '@shared/enums/BaseExceptionEnum';
 import { CommandTarget } from '@shared/enums/CommandTargetEnum';

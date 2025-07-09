@@ -3,7 +3,7 @@ import {
     TopicAction as TopicActionEntity,
     Action as ActionEntity,
     User as UserEntity
-} from '@/generated/prisma';
+} from '@prisma/client';
 import { TopicAction } from '@shared/models/TopicAction';
 import { TopicAdapter } from './TopicAdapter';
 import { ActionAdapter } from './ActionAdapter';

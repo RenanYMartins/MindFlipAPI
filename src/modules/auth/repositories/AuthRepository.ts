@@ -1,5 +1,5 @@
 import { UserAdapter } from '@shared/adapters/UserAdapter';
-import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
+import { DatabaseSingleton } from '@config/DatabaseSingleton';
 import { User } from '@shared/models/User';
 import { Result } from '@shared/models/Result';
 

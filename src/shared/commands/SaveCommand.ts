@@ -1,7 +1,7 @@
 import { IActionRepository } from '@shared/interfaces/IActionRepository';
 import { ICommand } from '../interfaces/ICommand';
 import { Result } from '@shared/models/Result';
-import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
+import { DatabaseSingleton } from '@config/DatabaseSingleton';
 import { ActionRepository } from '@shared/repositories/ActionRepository';
 import { PrismaClient } from '@prisma/client';
 import { HttpException } from '@shared/exceptions/HttpException';
@@ -19,18 +19,22 @@ export class SaveCommand<T> implements ICommand<T> {
 
     public async execute(value: unknown, target: CommandTarget, userId: number): Promise<Result<T>> {
         try {
-            const transaction = await this.db.client.$transaction(async (tx: PrismaClient) => {
-                const result = await this.repository.create(value, tx);
+            const transaction = await this.db.client.$transaction(async (tx) => {
+                const result = await this.repository.create(value, tx as PrismaClient);
                 if (result.isError) {
                     throw new Error();
                 }
 
-                const newAction = await this.action.register(tx, 'save', target, userId);
+                const newAction = await this.action.register(tx as PrismaClient, 'save', target, userId);
                 if (newAction.isError) {
                     throw new Error();
                 }
 
-                const relation = await this.repository.registerAction(tx, newAction.value!, result.value!);
+                const relation = await this.repository.registerAction(
+                    tx as PrismaClient,
+                    newAction.value!,
+                    result.value!
+                );
                 if (relation.isError) {
                     throw new Error();
                 }

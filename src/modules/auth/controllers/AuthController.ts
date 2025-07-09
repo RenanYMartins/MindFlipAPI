@@ -9,10 +9,12 @@ import { AuthService } from '../services/AuthService';
 import { ApiService } from '@shared/services/ApiService';
 import { HttpStatus } from '@shared/enums/HttpStatusEnum';
 import { LoginResponseDTO } from '../dto/response/LoginResponseDTO';
+import { AuthRepository } from '../repositories/AuthRepository';
+import { JwtFacade } from '@shared/facades/JwtFacade';
 
 @Controller('/')
 export class AuthController extends BaseController {
-    private readonly service = new AuthService();
+    private readonly service = new AuthService(new AuthRepository(), new JwtFacade());
 
     @Post('/')
     @Middleware(ValidationDTO.validate(LoginRequestSchema))

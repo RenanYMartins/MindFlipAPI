@@ -1,4 +1,4 @@
-import { Action as ActionEntity, User as UserEntity } from '@/generated/prisma';
+import { Action as ActionEntity, User as UserEntity } from '@prisma/client';
 import { Action } from '@shared/models/Action';
 import { UserAdapter } from './UserAdapter';
 import { CommandTarget } from '@shared/enums/CommandTargetEnum';

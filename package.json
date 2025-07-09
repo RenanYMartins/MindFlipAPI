@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "prisma generate && tsc",
-    "start": "node --env-file=.env.prod dist/server.js",
+    "build": "prisma generate && tsc --build tsconfig.build.json && tsc-alias",
+    "start": "node --env-file=.env dist/server.js",
     "dev": "prisma generate && nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env ./src/server.ts",
-    "test": "prisma generate && jest",
+    "setup": "prisma generate",
+    "test": "jest",
     "setup-db": "prisma migrate dev"
   },
   "keywords": [],
@@ -36,6 +37,7 @@
     "prisma": "^6.7.0",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.27.0"

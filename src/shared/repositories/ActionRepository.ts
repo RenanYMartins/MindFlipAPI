@@ -1,5 +1,5 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
+import { PrismaClient } from '@prisma/client';
+import { DatabaseSingleton } from '@config/DatabaseSingleton';
 import { ActionAdapter } from '@shared/adapters/ActionAdapter';
 import { Action } from '@shared/models/Action';
 import { Result } from '@shared/models/Result';

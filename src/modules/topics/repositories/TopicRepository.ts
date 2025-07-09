@@ -1,10 +1,10 @@
-import { DatabaseSingleton } from '@/src/config/DatabaseSingleton';
+import { DatabaseSingleton } from '@config/DatabaseSingleton';
 import { CreateTopic } from '../models/CreateTopic';
 import { Result } from '@shared/models/Result';
 import { TopicAdapter } from '@shared/adapters/TopicAdapter';
 import { Topic } from '@shared/models/Topic';
 import { IActionRepository } from '@shared/interfaces/IActionRepository';
-import { PrismaClient } from '@/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import { Action } from '@shared/models/Action';
 import { TopicActionAdapter } from '@shared/adapters/TopicActionAdapter';
 import { UpdateTopic } from '../models/UpdateTopic';

@@ -3,7 +3,7 @@ import {
     FlashcardAction as FlashcardActionEntity,
     Flashcard as FlashcardEntity,
     User as UserEntity
-} from '@/generated/prisma';
+} from '@prisma/client';
 import { FlashcardAction } from '@shared/models/FlashcardAction';
 import { FlashcardAdapter } from './FlashcardAdapter';
 import { ActionAdapter } from './ActionAdapter';

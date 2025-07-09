@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Action } from '@shared/models/Action';
 import { Result } from '@shared/models/Result';
 
