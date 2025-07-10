@@ -34,7 +34,32 @@
 			"response": []
 		},
 		{
-			"name": "Create User",
+			"name": "Undo",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/action/undo",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"action",
+						"undo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Create",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -61,9 +86,9 @@
 			"response": []
 		},
 		{
-			"name": "Undo",
+			"name": "User Get",
 			"request": {
-				"method": "DELETE",
+				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
@@ -72,14 +97,46 @@
 					}
 				],
 				"url": {
-					"raw": "{{host}}/v1/action/undo",
+					"raw": "{{host}}/v1/user",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"v1",
-						"action",
-						"undo"
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ruhan Teste\",\r\n    \"email\": \"teste@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/v1/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"user"
 					]
 				}
 			},
